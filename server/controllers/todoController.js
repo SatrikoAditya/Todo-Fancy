@@ -49,11 +49,15 @@ class TodoController {
             if(!data) {
                 res.status(404).json({ msg: 'data not found'})
             } else {
-                data.update({
+                return data.update({
                     title, description, due_date
+                },{
+                    validate: true
                 })
-                res.status(200).json({msg:'success edit data', data})
             }
+        })
+        .then(data => {
+            res.status(200).json({msg:'success edit data', data})
         })
         .catch(err => {
             console.log(err, '<== error')
