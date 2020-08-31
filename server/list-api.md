@@ -290,3 +290,95 @@
 
   * **Code:** 400 SequelizeValidationError <br />
     **Content:** `{ error : "Title is required" }`
+
+
+**FANCY TODO**
+----
+  'aplikasi todo'
+
+* **URL**
+
+  /register
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+  
+  'none'
+
+* **Data Params**
+
+  ```json
+    {
+        "email":"string",
+        "password":"string"
+    }
+  ```
+
+* **Success Response:**
+  
+  <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
+
+  * **Code:** 200 <br />
+    **Content:** 
+    ```json
+      {
+        "msg": "register user success",
+        "id": "integer",
+        "email": "integer"
+      }
+  ```
+ 
+* **Error Response:**
+
+  <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
+
+  * **Code:** 500 Internal server error <br />
+    **Content:** `{ error : "Internal server error" }`
+
+**FANCY TODO**
+----
+  'aplikasi todo'
+
+* **URL**
+
+  /login
+
+* **Method:**
+
+  `GET`
+  
+*  **URL Params**
+  
+  'none'
+
+* **Data Params**
+
+  ```json
+    {
+        "email":"string",
+        "password":"string"
+    }
+  ```
+
+* **Success Response:**
+  
+  <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
+
+  * **Code:** 200 <br />
+    **Content:** 
+    ```json
+      {
+          "token": "string"
+      }
+  ```
+ 
+* **Error Response:**
+
+  <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
+
+  * **Code:** 500 Internal server error <br />
+    **Content:** `{ error : "Internal server error" }`
+  
