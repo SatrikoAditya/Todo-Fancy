@@ -3,7 +3,7 @@ const { comparePassword } = require('../helpers/bcrypt')
 const { generateToken } = require('../helpers/jwt')
 
 class UserController {
-    static register(req, res) {
+    static register(req, res, next) {
         let { email, password } = req.body
         User.create({
             email, password
@@ -16,13 +16,11 @@ class UserController {
             })
         })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            res.status(500).json({error})
+            next(err)
         })
     }
 
-    static login(req, res) {
+    static login(req, res, next) {
         let { email, password } = req.body
         User.findOne({
             where : {
@@ -31,11 +29,11 @@ class UserController {
         })
         .then(data => {
             if(!data) {
-                throw {msg: 'invalid email or password'}
+                throw {name: 'LOGIN_FAILED'}
             } else {
                 let comparePass = comparePassword(password, data.password)
                 if(!comparePass) {
-                    throw {msg: 'invalid email or password'}
+                    throw {name : 'LOGIN_FAILED'}
                 } else {
                     let payload = {
                         id: data.id,
@@ -47,8 +45,7 @@ class UserController {
             }
         })
         .catch(err => {
-            let error = err.msg || 'Internal server error'
-            res.status(500).json({error})
+            next(err)
         })
     }
 }

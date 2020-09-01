@@ -1,53 +1,53 @@
 const { Todo } = require('../models/')
 
 class TodoController {
-    static create(req, res) {
+    static create(req, res, next) {
         let { title, description, due_date } = req.body
+        const userId = req.loggedInUser.id
         Todo.create({
-            title, description, due_date, status:false
+            title, description, due_date, status:false, userId
         })
         .then(data => {
             res.status(201).json({data})
         })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            res.status(500).json({error})
+            next(err)
         })
     }
 
-    static findAll(req, res) {
-        Todo.findAll()
+    static findAll(req, res, next) {
+        const userId = req.loggedInUser.id
+        Todo.findAll({
+            where : {
+                userId
+            }
+        })
         .then(data => {
             res.status(200).json({ data })
         })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            res.status(500).json({error})
+            next(err)
         })
     }
 
-    static findByPk(req, res) {
+    static findByPk(req, res, next) {
         const { id } = req.params
         Todo.findByPk(id)
         .then(data => {
             res.status(200).json({ data })
         })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            res.status(404).json({msg: 'data not found'})
+            next(err)
         })
     }
 
-    static update(req, res) {
+    static update(req, res, next) {
         let { title, description, due_date } = req.body
         const { id } = req.params
         Todo.findByPk(id)
         .then(data => {
             if(!data) {
-                res.status(404).json({ msg: 'data not found'})
+                throw { name: 'DATA_NOT_FOUND'}
             } else {
                 return data.update({
                     title, description, due_date
@@ -60,31 +60,22 @@ class TodoController {
             res.status(200).json({msg:'success edit data', data})
         })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            if(err.name === "SequelizeValidationError"){
-                res.status(400).json({error})
-            } else {
-                res.status(500).json({error})
-            }
+            next(err)
         })
     }
 
-    static delete(req, res) {
+    static delete(req, res, next) {
         const { id } = req.params
-        Todo.findByPk(id)
-        .then(data => {
-            if(!data) {
-                res.status(404).json({ msg: 'data not found'})
-            } else {
-                data.destroy()
-                res.status(200).json({msg:'success delete data', data})
+        Todo.destroy({
+            where : {
+                id
             }
         })
+        .then(data => {
+            res.status(200).json({msg:'success delete data', data})
+        })
         .catch(err => {
-            console.log(err, '<== error')
-            let error = err.errors[0].message || 'Internal server error'
-            res.status(500).json({error})
+            next(err)
         })
     }
 }
