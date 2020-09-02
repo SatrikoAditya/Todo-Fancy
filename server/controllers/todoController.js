@@ -44,20 +44,17 @@ class TodoController {
     static update(req, res, next) {
         let { title, description, due_date } = req.body
         const { id } = req.params
-        Todo.findByPk(id)
-        .then(data => {
-            if(!data) {
-                throw { name: 'DATA_NOT_FOUND'}
-            } else {
-                return data.update({
-                    title, description, due_date
-                },{
-                    validate: true
-                })
+        Todo.update({
+            title, description, due_date
+        }, {
+            where : {
+                id
             }
+        }, {
+            validate: true
         })
         .then(data => {
-            res.status(200).json({msg:'success edit data', data})
+            res.status(200).json({msg:'success edit data'})
         })
         .catch(err => {
             next(err)
@@ -72,7 +69,7 @@ class TodoController {
             }
         })
         .then(data => {
-            res.status(200).json({msg:'success delete data', data})
+            res.status(200).json({msg:'success delete data'})
         })
         .catch(err => {
             next(err)
