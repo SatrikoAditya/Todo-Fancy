@@ -41,6 +41,32 @@ function login(event) {
         })
 }
 
+function register(event) {
+    event.preventDefault()
+    let email = $('#newEmail-user').val()
+    let password = $('#newPassword-user').val()
+
+    $.ajax({
+        url: `${serverUrl}/register`,
+        method: 'post',
+        data: {
+            email, password
+        }
+    })
+    .done(data => {
+        console.log('berhasil register user bar')
+        auth()
+        closeModal()
+    })
+    .fail(err => {
+        console.log(err.responseJSON, 'gagal register')
+    })
+    .always(_ => {
+        $('#newEmail-user').val('')
+        $('#newPassword-user').val('')
+    })
+}
+
 function logout() {
     localStorage.clear()
     auth()
@@ -74,10 +100,6 @@ function fetchPost() {
     .fail(err => {
         console.log(err.responseJSON, 'data error')
     })
-}
-
-function closeModal() {
-    $('#add-modal').modal('hide')
 }
 
 function addTodo(event) {

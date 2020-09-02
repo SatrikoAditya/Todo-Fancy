@@ -31,9 +31,10 @@
                     <br>
                     <div class="col text-center">
                         <button type="submit" class="btn btn-primary btn-block rounded" style="align-content: center;">Login</button>
-                        <button type="submit" class="btn btn-success btn-block rounded" style="align-content: center;">Register</button>
+                        <button type="button" class="btn btn-success btn-block rounded" style="align-content: center; margin-top: 15px;" data-toggle="modal" data-target="#register-modal">Register</button>
                     </div>
                   </form>
+                  
               </div>
           </div>
           <div class="float-left" style="margin-left: 150px;">
@@ -58,6 +59,31 @@
               </ul>
             </div>
           </div>
+      </section>
+
+      <!-- Pop up Register user-->
+      <section id="register-user">
+        <div class="modal fade" id="register-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Register User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="register(event)">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="newEmail-user" placeholder="Email here..">
+                            <label>Password</label>
+                            <input type="password" class="form-control" id="newPassword-user" placeholder="Password here..">
+                  </div>
+                  <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary rounded">Submit</button>
+                            <button class="btn btn-danger rounded" data-dismiss="modal">Cancel</button> 
+                        </form>
+                  </div>
+                </div>
+            </div>
+        </div>
       </section>
 
       <!-- Pop up add Todo-->
@@ -98,11 +124,11 @@
                     <div class="modal-body">
                         <form onsubmit="editTodo(event)">
                             <label>Title</label>
-                            <input type="text" class="form-control" id="title-todo" placeholder="Title here..">
+                            <input type="text" class="form-control" id="edit-title" placeholder="Title here..">
                             <label>Due Date</label>
-                            <input type="date" class="form-control" id="date-todo">
+                            <input type="date" class="form-control" id="edit-date">
                             <label>Description</label>
-                            <textarea id="description-todo" class="form-control" name="description" rows="3" placeholder="Description here.."></textarea>
+                            <textarea id="edit-description" class="form-control" name="description" rows="3" placeholder="Description here.."></textarea>
                   </div>
                   <div class="modal-footer">
                             <button type="submit" class="btn btn-primary rounded">Submit</button>
