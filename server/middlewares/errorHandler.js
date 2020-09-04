@@ -21,8 +21,10 @@ function errorHandler (err, req, res, next) {
     } else if(err.name === 'LOGIN_FAILED') {
         statusCode = 400
         errors.push('Invalid email or password')
-    }
-     else {
+    } else if(err.name === 'JsonWebTokenError'){
+        statusCode = 400
+        errors.push('Invalid Token')
+    } else {
         errors.push(err.msg)
     }
 

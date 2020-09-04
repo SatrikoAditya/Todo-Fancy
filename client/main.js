@@ -1,5 +1,5 @@
 const serverUrl = 'http://localhost:3000'
-let todoId
+let editId = null
 
 $(document).ready(function() {
     auth()
@@ -9,7 +9,7 @@ function auth() {
     if(localStorage.token) {
         $('#login-page').hide()
         $('#home-page').show()
-        fetchPost()
+        fetchTodo()
     } else {
         $('#login-page').show()
         $('#home-page').hide()
@@ -33,7 +33,7 @@ function login(event) {
             auth()
         })
         .fail(err => {
-            console.log(err.responseJSON, 'Gagal login')
+            alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('Gagal login') });
         })
         .always(_ => {
             $('#email-user').val('')
@@ -54,12 +54,13 @@ function register(event) {
         }
     })
     .done(data => {
-        console.log('berhasil register user bar')
+        console.log('berhasil register user baru')
+        $('#register-modal').modal('hide')
         auth()
-        closeModal()
     })
     .fail(err => {
-        console.log(err.responseJSON, 'gagal register')
+        $('#register-modal').modal('hide')
+        alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('Gagal Register') });
     })
     .always(_ => {
         $('#newEmail-user').val('')
@@ -69,10 +70,14 @@ function register(event) {
 
 function logout() {
     localStorage.clear()
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
     auth()
 }
 
-function fetchPost() {
+function fetchTodo() {
     $.ajax({
         url: `${serverUrl}/todos`,
         method: 'get',
@@ -81,24 +86,69 @@ function fetchPost() {
         }
     })
     .done(data => {
-        todo = data.data
         $('#todo-container').empty()
         data.data.forEach(todo => {
+            let date = new Date(todo.due_date)
             $('#todo-container').append(`
             <li>
                     <div><br>
                         <h5> <b>${todo.title}</b></h5>
                         <h6><b>Description:</b>  ${todo.description}</h4>
-                        <p><b>Due date:</b>  ${new Date(todo.due_date).toDateString()}</p>
-                        <button onclick="updateTodo(${todo.id})" data-toggle="modal" data-target="#edit-modal" type="button" class="btn btn-primary">Update</button>
-                        <button onclick="deleteTodo(${todo.id})" type="button" class="btn btn-success">Done</button>
+                        <p><b>Due date:</b>  ${new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split("T")[0]}</p>
+                        <button onclick="getTodo(${todo.id})" data-toggle="modal" data-target="#edit-modal" type="button" class="btn btn-primary">Update</button>
+                        <button style="margin-left: 10px;" onclick="deleteTodo(${todo.id})" type="button" class="btn btn-success">Done</button>
                     </div><br>
             </li>
             `)
         });
     })
     .fail(err => {
-        console.log(err.responseJSON, 'data error')
+        alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('gagal') });
+    })
+}
+
+function getTodo(id) {
+    event.preventDefault()
+    editId = id
+    $.ajax({
+        url: `${serverUrl}/todos/${id}`,
+        method: 'get',
+        headers: {
+            token: localStorage.token
+        }
+    })
+    .done(data => {
+        let date = new Date(data.data.due_date)
+        $('#edit-title').val(data.data.title)
+        $('#edit-date').val(new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split("T")[0])
+        $('#edit-description').val(data.data.description)
+    })
+    .fail(err => {
+        console.log(err.responseJSON, 'data error di get todo')
+    })
+}
+
+function editTodo(event) {
+    event.preventDefault()
+    let title = $('#edit-title').val()
+    let due_date = $('#edit-date').val()
+    let description = $('#edit-description').val()
+    $.ajax({
+        url: `${serverUrl}/todos/${editId}`,
+        method: 'put',
+        headers: {
+            token: localStorage.token
+        },
+        data: {
+            title, description, due_date
+        }
+    })
+    .done(data => {
+        fetchTodo()
+        $('#edit-modal').modal('hide')
+    })
+    .fail(err => {
+        alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('gagal edit') });
     })
 }
 
@@ -119,13 +169,20 @@ function addTodo(event) {
         }
     })
     .done(data => {
-        fetchPost()
-        closeModal()
+        fetchTodo()
+        $('#add-modal').modal('hide')
+        console.log('masuk')
     })
     .fail(err => {
-        console.log(err.responseJSON, 'data error')
+        alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('gagal add') });
+    })
+    .always(_ => {
+        $('#title-todo').val('')
+        $('#date-todo').val('')
+        $('#description-todo').val('')
     })
 }
+
 
 function deleteTodo(id) {
     $.ajax({
@@ -136,10 +193,50 @@ function deleteTodo(id) {
         }
     })
     .done(_ => {
-        fetchPost()
+        fetchTodo()
     })
     .fail(err => {
-        console.log(err.responseJSON, 'data error')
+        console.log(err.responseJSON, 'data error di delete')
     })
 }
+
+function getActivity(event) {
+    event.preventDefault()
+    $.ajax({
+        url: `${serverUrl}/activity`,
+        method: 'get',
+        headers: {
+            token: localStorage.token
+        }
+    })
+    .done(data => {
+        alertify.alert('Your random activity', data.activity, function(){ console.log('berhasil random') });
+    })
+    .fail(err => {
+        alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('gagal mendapatkan aktivitasmu') });
+    })
+}
+
+function onSignIn(googleUser) {
+    let id_token = googleUser.getAuthResponse().id_token;
+    $.ajax({
+        url: `${serverUrl}/googlesign`,
+        method: 'post',
+        data : {
+            id_token 
+        }
+    })
+    .done(data => {
+        localStorage.setItem('token', data.token)
+        auth()
+    })  
+    .fail(err => {
+        console.log(err.responeJSON, 'err')
+    })
+}
+
+
+
+
+
 

@@ -9,7 +9,8 @@ router.use(authentication)
 router.post('/', TodoController.create)
 router.get('/', TodoController.findAll)
 router.get('/:id', TodoController.findByPk)
-router.put('/:id', authorization,TodoController.update)
+router.put('/:id', authorization, TodoController.update)
 router.delete('/:id', authorization, TodoController.delete)
+
 
 module.exports = router

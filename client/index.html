@@ -3,15 +3,37 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="1029136822947-u01baf1hp53e36c123rftlnnjpmbjitu.apps.googleusercontent.com">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <title>Fancy Todo</title>
     <style>
         body {
             font-family: 'Lato', sans-serif;
-            background-color:#FFFAFA;
         }
     </style>
+    <!-- JavaScript -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+
+    <!-- 
+        RTL version
+    -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.rtl.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.rtl.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.rtl.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.rtl.min.css"/>
   </head>
   <body>
       <!-- Login Page -->
@@ -28,10 +50,10 @@
                       <label for="exampleInputPassword1">Password</label>
                       <input type="password" class="form-control" id="password-user" placeholder="Input your password here..">
                     </div>
-                    <br>
                     <div class="col text-center">
-                        <button type="submit" class="btn btn-primary btn-block rounded" style="align-content: center;">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block rounded" style="align-content: center; margin-top: 25px;">Login</button>
                         <button type="button" class="btn btn-success btn-block rounded" style="align-content: center; margin-top: 15px;" data-toggle="modal" data-target="#register-modal">Register</button>
+                        <div class="g-signin2" data-onsuccess="onSignIn" style="margin-top: 15px;"></div>
                     </div>
                   </form>
                   
@@ -41,6 +63,7 @@
               <img src="./assets//img/PngItem_2892105.png" alt="todo_logo" width="400px">
           </div>
       </section>
+
 
       <!-- Home Page-->
       <section id="home-page" class="container">
@@ -57,9 +80,12 @@
               <ul id="todo-container" class="list-unstyled" style="overflow-y: auto; height: 400px;">
 
               </ul>
+              <br>
+              <h5>Need an activity? <a onclick="getActivity(event)" style="color: blue;">Click Here</a></h5>
             </div>
           </div>
       </section>
+
 
       <!-- Pop up Register user-->
       <section id="register-user">
@@ -77,7 +103,7 @@
                             <input type="password" class="form-control" id="newPassword-user" placeholder="Password here..">
                   </div>
                   <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary rounded">Submit</button>
+                            <button type="submit" class="btn btn-primary rounded" data-toggle="modal" data-target="#successRegister-modal">Submit</button>
                             <button class="btn btn-danger rounded" data-dismiss="modal">Cancel</button> 
                         </form>
                   </div>
@@ -85,6 +111,7 @@
             </div>
         </div>
       </section>
+
 
       <!-- Pop up add Todo-->
       <section id="add-todo">
@@ -104,7 +131,7 @@
                             <textarea id="description-todo" class="form-control" name="description" rows="3" placeholder="Description here.."></textarea>
                   </div>
                   <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary rounded">Submit</button>
+                            <button type="submit" class="btn btn-primary rounded" data-toggle="modal" data-target="#successAdd-modal">Submit</button>
                             <button class="btn btn-danger rounded" data-dismiss="modal">Cancel</button> 
                         </form>
                   </div>
@@ -113,6 +140,7 @@
         </div>
       </section>
 
+      
       <!-- Pop up edit Todo-->
       <section id="edit-todo">
         <div class="modal fade" id="edit-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -140,10 +168,11 @@
         </div>
       </section>
 
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-      <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
       <script src="main.js"></script>
       
   </body>
