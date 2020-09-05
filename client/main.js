@@ -56,6 +56,7 @@ function register(event) {
     .done(data => {
         console.log('berhasil register user baru')
         $('#register-modal').modal('hide')
+        alertify.alert('Alert!', 'Account successfully registered!', function(){ console.log('Berhasil Register') });
         auth()
     })
     .fail(err => {
@@ -146,6 +147,7 @@ function editTodo(event) {
     .done(data => {
         fetchTodo()
         $('#edit-modal').modal('hide')
+        alertify.alert('Alert!', 'Edit Todo Success!', function(){ console.log('Berhasil edit') });
     })
     .fail(err => {
         alertify.alert('Alert!', err.responseJSON.errors[0], function(){ console.log('gagal edit') });
@@ -171,6 +173,7 @@ function addTodo(event) {
     .done(data => {
         fetchTodo()
         $('#add-modal').modal('hide')
+        alertify.alert('Alert!', 'Add Todo Success!', function(){ console.log('Berhasil add') });
         console.log('masuk')
     })
     .fail(err => {
@@ -185,18 +188,23 @@ function addTodo(event) {
 
 
 function deleteTodo(id) {
-    $.ajax({
-        url: `${serverUrl}/todos/${id}`,
-        method: 'delete',
-        headers: {
-            token : localStorage.token
+    alertify.confirm('Are you sure this activity is finished?', function(yes) {
+        if(yes) {
+            $.ajax({
+                url: `${serverUrl}/todos/${id}`,
+                method: 'delete',
+                headers: {
+                    token : localStorage.token
+                },
+            })
+            .done(_ => {
+                alertify.alert('Alert!', `This Todo is Finished!`, function(){ console.log('delete todo') });
+                fetchTodo()
+            })
+            .fail(err => {
+                console.log(err.responseJSON, 'data error di delete')
+            })
         }
-    })
-    .done(_ => {
-        fetchTodo()
-    })
-    .fail(err => {
-        console.log(err.responseJSON, 'data error di delete')
     })
 }
 
