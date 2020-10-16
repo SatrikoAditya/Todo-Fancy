@@ -41,3 +41,5 @@ Challengenya masih kurang? Coba kerjain ini!
 
 ## Submission
 Fork dari organization, lalu open pull request dengan title NAMA LENGKAP KAMU (ex: Dimitri Wahyudiputra) dan assign ke buddy kamu. Tambahkan comment yang berisi environment variables yang dipakai (beserta valuenya), link deploy (jika ada), fitur tambahannya apa dan kendala saat mengerjakan.
+
+demo : https://fancy-todo-288512.web.app/
