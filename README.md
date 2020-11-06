@@ -1,5 +1,5 @@
 # Fancy-Todo
-
+Deployment Link: https://github.com/SatrikoAditya/Todo-Fancy
 Buatlah aplikasi Todo menggunakan Client-server model dengan spesifikasi sebagai berikut:
 - API Documentation yang meliputi : URLs, HTTP method, request, response (success dan error case)
 - Membuat routes sesuai standar REST API
